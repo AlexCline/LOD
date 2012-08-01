@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>ಠ_ಠ -- Look of Disapproval</title>
+  <style>
+    body { font-size: 10em; cursor: none; }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+  </style>
+  <script>
+    var HEIGHT, WIDTH, VHEIGHT, VWIDTH;
+    var canvas, context;
+    var mx = 0, my = 0;
+    var INTERVAL = 32;
+    function init() {
+      canvas = document.getElementById("lod");
+      context = canvas.getContext("2d");
+      canvas.onmouseover = mouseOver;
+      canvas.onmousemove = mouseMove;
+      
+      sizeCanvas();
+      
+      setInterval(draw, INTERVAL);
+    }
+    
+    function draw(){
+      sizeCanvas();
+      clearCanvas();
+      
+      context.font = "normal 200px sans-serif";
+      context.fillStyle = "Black";
+      if(navigator.userAgent.indexOf('MSIE') != -1)
+        context.fillText("ರ_ರ", WIDTH/2 - 180, HEIGHT/2 + 100);
+      else if(navigator.userAgent.indexOf('Macintosh') != -1)
+        context.fillText("ರ_ರ", WIDTH/2 - 174, HEIGHT/2 + 50);
+      else
+        context.fillText("ರ_ರ", WIDTH/2 - 180, HEIGHT/2 + 55);
+     
+      //context.font = "normal 20px sans-serif";
+      //context.fillText(navigator.userAgent, 0, 20); 
+      // Calculate eye positions
+      
+      var leftEyeXOrigin = WIDTH/2 - 116;
+      var leftEyeYOrigin = HEIGHT/2;
+      var rightEyeXOrigin = WIDTH/2 + 119;
+      var rightEyeYOrigin = HEIGHT/2;
+      var radius = 32;
+      
+      var leftDiffX = mx - leftEyeXOrigin;
+      var leftDiffY = my - leftEyeYOrigin;
+      var rightDiffX = mx - rightEyeXOrigin;
+      var rightDiffY = my - rightEyeYOrigin;
+      
+      var leftRads = Math.sqrt(leftDiffX * leftDiffX + leftDiffY * leftDiffY);
+      var rightRads = Math.sqrt(rightDiffX * rightDiffX + rightDiffY * leftDiffY);
+      if(leftRads > radius)
+        leftRads = radius;
+      if(rightRads > radius)
+        rightRads = radius;
+        
+      var leftEyeX = leftRads * Math.cos(Math.atan2(leftDiffY, leftDiffX));
+      var leftEyeY = leftRads * Math.sin(Math.atan2(leftDiffY, leftDiffX));
+      var rightEyeX = rightRads * Math.cos(Math.atan2(rightDiffY, rightDiffX));
+      var rightEyeY = rightRads * Math.sin(Math.atan2(rightDiffY, rightDiffX));
+      
+      context.beginPath();
+      context.arc(leftEyeXOrigin + leftEyeX, leftEyeYOrigin + leftEyeY, 10, 0, Math.PI*2, true);
+      context.closePath();
+      context.stroke();
+      context.fill();
+      context.beginPath();
+      context.arc(rightEyeXOrigin + rightEyeX, rightEyeYOrigin + rightEyeY, 10, 0, Math.PI*2, true);
+      context.closePath();
+      context.stroke();
+      context.fill();
+    }
+    
+    function mouseMove(e) {
+      if (e.pageX || e.pageY) { 
+        mx = e.pageX;
+        my = e.pageY;
+      }
+    }
+    function mouseOver() {}
+    function clearCanvas() {
+      context.clearRect(0, 0, WIDTH, HEIGHT);
+    }
+    
+    function sizeCanvas() {
+      VHEIGHT = window.innerHeight;
+      VWIDTH = window.innerWidth;
+    
+      if (VHEIGHT != HEIGHT || VWIDTH != WIDTH) {
+        canvas.setAttribute('height', VHEIGHT);
+        canvas.setAttribute('width', VWIDTH);
+    
+        HEIGHT = canvas.height;
+        WIDTH = canvas.width;
+      }
+    }
+  </script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<body onload="init();">
+  <canvas id="lod"></canvas>
+</body>
+</html>
